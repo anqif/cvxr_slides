@@ -67,7 +67,6 @@
 
 \title{Disciplined Convex Optimization with CVXR}
 
-
 \author{\textbf{Anqi Fu} \and Bala Narasimhan \and Stephen Boyd \\[2ex]
 	EE \& Statistics Departments\\[1ex]
 	Stanford University}
@@ -77,6 +76,10 @@
 	
 \begin{frame}
 	\titlepage
+\end{frame}
+
+\begin{frame}
+	\tableofcontents
 \end{frame}
 
 \section{Convex Optimization}
@@ -226,12 +229,17 @@
 	\EIT
 \end{frame}
 
-\section{Code Examples}
-\begin{frame}[fragile]{Example: Ordinary Least Squares}
+\section{Examples}
+
+\begin{frame}{Example: Ordinary Least Squares (OLS)}
+	TODO: Mathematical definition of problem?
+\end{frame}
+
+\begin{frame}[fragile]{Example: Ordinary Least Squares (OLS)}
 	\begin{verbatim}
 	library(cvxr)
 	beta <- Variable(n)
-	obj <- sum_squares(y - X %*% beta)
+	obj <- SumSquares(y - X %*% beta)
 	prob <- Problem(Minimize(obj))
 	solution <- solve(prob)
 	solution$opt_val
@@ -260,7 +268,7 @@
 	\EIT
 \end{frame}
 
-\begin{frame}{Example: Non-Negative Least Squares}
+\begin{frame}{Results: Non-Negative Least Squares}
 	\vfill
 	\begin{figure}
 		\includegraphics[width=1\textwidth]{figs/nnls.png}
@@ -268,10 +276,112 @@
 	\vfill
 \end{frame}
 
+\begin{frame}[fragile]{Overview: Huber Regression}
+	\[
+	\begin{array}{ll}
+	\mbox{minimize} & \sum_i^n \phi(y_i - \beta^T x_i)
+	\end{array}
+	\]
+	with variable $\beta \in \reals^n$ and Huber function
+	\[
+	\begin{array}{ll}
+	\phi(u) &= \begin{cases} u^2 & |u| \leq 0 \\
+							2Mu - M^2 & |u| > 0 \end{cases}
+	\end{array}
+	\]
+	where $M > 0$ is the threshold
+	\BIT
+		\item TODO: Plot of Huber function?
+		\item Same as OLS for small residuals, allows some large residuals
+		\item Better fit when data contains outliers
+	\EIT
+\end{frame}
+
+\begin{frame}[fragile]{Example: Huber Regression}
+	\begin{verbatim}
+	beta = Variable(n)
+	cost = SumEntries(Huber(y - X %*% beta, 1))
+	prob <- Problem(Minimize(cost))
+	solution <- solve(prob)
+	solution$opt_val
+	solution$beta
+	\end{verbatim}
+	
+	\BIT
+		\item Generate data and replace fraction $p$ of $y_i$'s with $-y_i$
+		\item Huber regression with threshold of 1, no constraints
+		\item Compare with OLS and prescient regression where sign changes are known
+	\EIT
+\end{frame}
+
+\begin{frame}{Results: Huber Regression}
+	\vfill
+	\begin{figure}
+		\includegraphics[width=1\textwidth]{figs/huber1.png}
+	\end{figure}
+	\vfill
+\end{frame}
+
+\begin{frame}{Results: Huber Regression}
+	\vfill
+	\begin{figure}
+		\includegraphics[width=1\textwidth]{figs/huber2.png}
+	\end{figure}
+	\vfill
+\end{frame}
+
+\begin{frame}{Overview: Direct Standardization}
+	\BIT
+	\item TODO: Overview of problem
+	\EIT
+\end{frame}
+
+\begin{frame}{Overview: Direct Standardization}
+	\[
+	\begin{array}{ll} \mbox{maximize} & \sum_i p_i \log p_i \\
+	\mbox{subject to} & p \geq 0, \sum_i^n p_i = 1\\
+	& Ap = b
+	\end{array}
+	\]
+	with variable $p \in \reals^n$
+	
+	\BIT
+	\item Probabilities $p$ must be non-negative and sum to 1
+	\item $Ap = b$ represents distributional knowledge about some attributes, e.g. expected value, CDF in given range, etc
+	\item Maximizing negative entropy without constraint $Ap = b$ yields uniform distribution
+	\EIT
+\end{frame}
+
+\begin{frame}{Example: Direct Standardization}
+	\BIT
+	\item TODO: Specific data we generate for example
+	\EIT
+\end{frame}
+
+\begin{frame}[fragile]{Example: Direct Standardization}
+	\begin{verbatim}
+	probs <- Variable(n)
+	cost <- SumEntries(Entr(probs))
+	constr <- list(probs >= 0, SumEntries(probs) == 1, 
+				   t(X[,1]) %*% probs == 0.5)
+	prob <- Problem(Maximize(cost), constr)
+	solution <- solve(prob)
+	solution$probs
+	\end{verbatim}
+	
+	\BIT
+		\item TODO: Details about code, constraint on fraction of women
+	\EIT
+\end{frame}
+
+\begin{frame}{Results: Direct Standardization}
+	TODO: Plot of CDF from original, skewed, and estimated distributions
+\end{frame}
+
 \section{Disciplined Convex Programming}
 
 \iffalse
-\begin{frame}{Curvature: Convex, concave, and affine functions}
+\begin{frame}{Curvature: Convex, Concave, and Affine functions}
 	\includegraphics[width=0.9\textwidth,height=0.20\textheight]{figs/curvature.png}
 	\BIT
 		\item $f$ is \emph{concave} if $-f$ is convex, \ie, for any $x,y$,
