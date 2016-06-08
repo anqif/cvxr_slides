@@ -78,10 +78,6 @@
 \begin{frame}
 	\titlepage
 \end{frame}
-	
-\begin{frame}{Outline}
-	\tableofcontents
-\end{frame}
 
 \section{Convex Optimization}
 
@@ -96,21 +92,21 @@
 	with variable $x \in \reals^n$
 	
 	\BIT
-	\item Objective and inequality constraints $f_0, \ldots, f_m$ are convex %\\[1ex]
-	%for all $x$, $y$, $\theta \in [0,1]$,
-	%\[
-	%f_i(\theta x + (1-\theta) y) \leq \theta f_i(x) + (1-\theta) f_i(y)
-	%\]
-	%\ie, graphs of $f_i$ curve upward
-	\item Equality constraints are linear
+		\item Objective and inequality constraints $f_0, \ldots, f_m$ are convex %\\[1ex]
+		%for all $x$, $y$, $\theta \in [0,1]$,
+		%\[
+		%f_i(\theta x + (1-\theta) y) \leq \theta f_i(x) + (1-\theta) f_i(y)
+		%\]
+		%\ie, graphs of $f_i$ curve upward
+		\item Equality constraints are linear
 	\EIT
 	\pause
 	
 	\vfill
 	Why?
 	\BIT
-	\item We can solve convex optimization problems
-	\item There are many applications in many fields
+		\item We can solve convex optimization problems
+		\item There are many applications in many fields
 	\EIT
 	
 \end{frame}
@@ -118,19 +114,19 @@
 \iffalse
 \begin{frame}{Examples}
 	\BIT
-	\item least-squares, least-squares with $\ell_1$ regularization (lasso)
-	\item linear program (LP), quadratic program (QP)
-	\item second-order cone program (SOCP)
-	\item semidefinite program (SDP)
-	\item maximum entropy and related problems
-	\item support vector machine
+	\item Least-squares, least-squares with $\ell_1$ regularization (lasso)
+	\item Linear program (LP), quadratic program (QP)
+	\item Second-order cone program (SOCP)
+	\item Semidefinite program (SDP)
+	\item Maximum entropy and related problems
+	\item Support vector machine
 	\EIT
 \end{frame}
 \fi
 
 \iffalse
-\begin{frame}{Convex optimization problem --- conic form}
-	cone program:
+\begin{frame}{Convex Optimization Problem --- Conic Form}
+	Cone program:
 	\[
 	\begin{array}{ll} \mbox{minimize} & c^Tx\\
 	\mbox{subject to} & Ax = b, \quad x \in \mathcal K
@@ -139,45 +135,44 @@
 	with variable $x \in \reals^n$
 	
 	\BIT
-	\item linear objective, equality constraints;
+	\item Linear objective, equality constraints;
 	$\mathcal K$ is convex cone
 	%\BIT
 	%\item $x \in \mathcal K$ is a generalized nonnegativity constraint
 	%\EIT
-	\item special cases:
+	\item Special cases:
 	\BIT
-	\item linear program (LP)
+	\item Linear program (LP)
 	%second-order cone program (SOCP): $\mathcal K = $
 	%$\mathcal K=\symm^n_{+}$: %(PSD matrices)
-	\item semidefinite program (SDP)
+	\item Semidefinite program (SDP)
 	\EIT
 	\vfill
-	\item the modern canonical form
-	\item \emph{there are well developed solvers for cone programs}
+	\item The modern canonical form
+	\item \emph{There are well developed solvers for cone programs}
 	\EIT
 \end{frame}
 \fi
 
 \iffalse
-\begin{frame}{Why convex optimization?}
-	
+\begin{frame}{Why Convex Optimization?}
 	\BIT
-	\item beautiful, fairly complete, and useful theory
+	\item Beautiful, fairly complete, and useful theory
 	%\pause
-	\item solution algorithms that work well in theory and practice
+	\item Solution algorithms that work well in theory and practice
 	\BIT
-	\item convex optimization is \textbf{actionable}
+	\item Convex optimization is \textbf{actionable}
 	\EIT
 	%\pause
-	\item \textbf{many applications} in
+	\item \textbf{Many applications} in
 	\BIT
-	\item control
-	\item combinatorial optimization
-	\item signal and image processing
-	\item communications, networks
-	\item circuit design
-	\item machine learning, statistics
-	\item finance
+	\item Control
+	\item Combinatorial optimization
+	\item Signal and image processing
+	\item Communications, networks
+	\item Circuit design
+	\item Machine learning, statistics
+	\item Finance
 	\EIT
 	%\ldots and many more
 	\EIT
@@ -185,27 +180,25 @@
 \fi
 
 \iffalse
-\begin{frame}{How do you solve a convex problem?}
-	
+\begin{frame}{How do you Solve a Convex Problem?}
 	\BIT\itemsep 20pt
-	\item use an existing custom solver for your specific problem
+	\item Use an existing custom solver for your specific problem
 	%(\eg, SVM, lasso)
 	%\item write your own (custom) solver
 	%\BIT
 	%\item lots of work, but can take advantage of special structure
 	%\item commonly done in machine learning
 	%\EIT
-	\item develop a new solver for your problem using a currently
+	\item Develop a new solver for your problem using a currently
 	fashionable method
 	%(mirror descent, Nesterov acceleration, Frank-Wolf \ldots)
 	\BIT
-	\item requires work
-	\item but (with luck) will scale to large problems
+	\item Requires work
+	\item But (with luck) will scale to large problems
 	\EIT
-	\item transform your problem into a cone program,
-	and use a standard cone program solver
+	\item Transform your problem into a cone program, and use a standard cone program solver
 	\BIT
-	\item can be \emph{automated} using \emph{domain specific languages}
+	\item Can be \emph{automated} using \emph{domain specific languages}
 	\item CVX, YALMIP, CVXPY, Convex.jl
 	\EIT
 	
@@ -226,12 +219,122 @@
 	A modeling language in R for convex optimization
 	
 	\BIT
-	\item Open source down to the solvers
-	\item Uses disciplined convex programming to verify convexity
-	\item Supports parameters, multiple constraints
-	\item Mixes easily with general R code and other libraries
+		\item Open source down to the solvers
+		\item Uses disciplined convex programming to verify convexity
+		\item Supports parameters, multiple constraints
+		\item Mixes easily with general R code and other libraries
 	\EIT
+\end{frame}
+
+\section{Code Examples}
+\begin{frame}[fragile]{Example: Ordinary Least Squares}
+	\begin{verbatim}
+	library(cvxr)
+	beta <- Variable(n)
+	obj <- sum_squares(y - X %*% beta)
+	prob <- Problem(Minimize(obj))
+	solution <- solve(prob)
+	solution$opt_val
+	solution$beta
+	\end{verbatim}
 	
+	\BIT
+		\item \verb|X| and \verb|y| are constants; \verb|beta|, \verb|obj|, and \verb|prob| are S4 objects
+		\item \verb|solve| method canonicalizes, solves, and returns a list with final objective and optimal value of each variable
+	\EIT
+\end{frame}
+
+\begin{frame}[fragile]{Example: Non-Negative Least Squares}
+	\begin{verbatim}
+	constr <- list(beta >= 0)
+	prob2 <- Problem(Minimize(obj), constr)
+	solution2 <- solve(prob2)
+	solution2$opt_val
+	solution2$beta
+	\end{verbatim}
+	
+	\BIT
+		\item Extend prior example by requiring \verb|beta| be non-negative
+		\item Construct new problem with list \verb|constr| of constraints formed from constants and variables
+		\item Variables, parameters, expressions, and constraints exist outside of any problem
+	\EIT
+\end{frame}
+
+\begin{frame}{Example: Non-Negative Least Squares}
+	\vfill
+	\begin{figure}
+		\includegraphics[width=1\textwidth]{figs/nnls.png}
+	\end{figure}
+	\vfill
+\end{frame}
+
+\section{Disciplined Convex Programming}
+
+\iffalse
+\begin{frame}{Curvature: Convex, concave, and affine functions}
+	\includegraphics[width=0.9\textwidth,height=0.20\textheight]{figs/curvature.png}
+	\BIT
+		\item $f$ is \emph{concave} if $-f$ is convex, \ie, for any $x,y$,
+		$\theta \in [0,1]$,
+		\[
+		f(\theta x + (1-\theta) y) \geq \theta f(x) + (1-\theta) f(y)
+		\]
+		\item $f$ is \emph{affine} if it is convex and concave, \ie,
+		\[
+		f(\theta x + (1-\theta) y) = \theta f(x) + (1-\theta) f(y)
+		\]
+		for any $x,y$, $\theta \in [0,1]$
+		\item $f$ is affine $\Longleftrightarrow$ it has form
+		$f(x) = a^Tx +b$
+	\EIT
+\end{frame}
+\fi
+
+\iffalse
+\begin{frame}{Verifying a Function is Convex or Concave}
+	(Verifying affine is easy)
+	
+	\vfill
+	Approaches:
+	\BIT
+		\item Via basic definition (inequality)
+		\item Via first or second order conditions, \eg, $\nabla^2 f(x) \succeq 0$
+		
+		\vfill
+		
+		\item Via convex calculus: construct $f$ using
+		\BIT
+			\item Library of basic functions that are convex or concave
+			\item Calculus rules or transformations that preserve convexity
+		\EIT
+	\EIT
+\end{frame}
+\fi
+
+\begin{frame}{Disciplined Convex Programming (DCP)}
+	(\emph{Grant, Boyd, Ye, 2006})
+	
+	\vfill
+	\BIT
+		\item Framework for describing convex optimization problems
+		\item Based on constructive convex analysis
+		\item Sufficient, but not necessary for convexity
+		\item Basis for several domain-specific languages and tools for convex optimization
+		\BIT
+			\item CVX, YALMIP, CVXPY, Convex.jl
+		\EIT
+	\EIT
+	\vfill
+\end{frame}
+
+\section{Future Work}
+\begin{frame}{Future Work}
+	\BIT
+		\item More solvers - SCS, POGS, etc
+		\item More convex functions and constraints
+		\item Domain-specific language for defining new operators
+		\item Warm start to speed up convergence
+	\EIT
 \end{frame}
 
 \end{document}
