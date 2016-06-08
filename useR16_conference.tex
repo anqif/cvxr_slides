@@ -238,7 +238,7 @@
 \begin{frame}[fragile]{Example: Ordinary Least Squares (OLS)}
 	\begin{verbatim}
 	library(cvxr)
-	beta <- Variable(n)
+	beta <- Variable(m)
 	obj <- SumSquares(y - X %*% beta)
 	prob <- Problem(Minimize(obj))
 	solution <- solve(prob)
@@ -299,7 +299,7 @@
 
 \begin{frame}[fragile]{Example: Huber Regression}
 	\begin{verbatim}
-	beta = Variable(n)
+	beta = Variable(m)
 	cost = SumEntries(Huber(y - X %*% beta, 1))
 	prob <- Problem(Minimize(cost))
 	solution <- solve(prob)
@@ -338,7 +338,7 @@
 
 \begin{frame}{Overview: Direct Standardization}
 	\[
-	\begin{array}{ll} \mbox{maximize} & \sum_i p_i \log p_i \\
+	\begin{array}{ll} \mbox{maximize} & \sum_i^n p_i \log p_i \\
 	\mbox{subject to} & p \geq 0, \sum_i^n p_i = 1\\
 	& Ap = b
 	\end{array}
@@ -440,7 +440,7 @@
 \section{Future Work}
 \begin{frame}{Future Work}
 	\BIT
-		\item More solvers - SCS, POGS, etc
+		\item More solvers - SCS, CVXOPT, etc
 		\item More convex functions and constraints
 		\item Domain-specific language for defining new operators
 		\item Warm start to speed up convergence
