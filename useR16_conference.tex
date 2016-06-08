@@ -109,9 +109,32 @@
 	Why?
 	\BIT
 		\item We can solve convex optimization problems
-		\item There are many applications in many fields
+		\item There are many applications in many fields, including machine learning and statistics
 	\EIT
 	
+\end{frame}
+
+\begin{frame}{Convex Problems in Statistics}
+	%Existing packages for these, but new methods every years (see SigKDD)
+	\BIT
+		\item Least squares, ridge and lasso regression, non-negative least squares 
+		\item Isotonic regression
+		\item Logistic regression
+		\item Huber (robust) regression
+		\item Maximum entropy and related problems
+		\item Support vector machines
+		\item Sparse inverse covariance
+		\item \ldots and new methods being invented every year!
+	\EIT
+\end{frame}
+
+\begin{frame}{Domain Specific Languages for Convex Optimization}
+	%What's changed in last ~10 years is DSLs. Not necessary to descend to gradient or Hessian level. Tens of thousands of people use these packages.
+	\BIT
+		\item CVX, CVXPY, YALMIP, Convex.jl
+		\item Slower than custom code, but extremely flexible, fast prototyping, etc
+		\item TODO: CVXPY snippet
+	\EIT
 \end{frame}
 
 \iffalse
@@ -222,8 +245,8 @@
 	A modeling language in R for convex optimization
 	
 	\BIT
-		\item Open source down to the solvers
-		\item Uses disciplined convex programming to verify convexity
+		\item Connects to many open source solvers
+		%\item Uses disciplined convex programming to verify convexity
 		\item Supports parameters, multiple constraints
 		\item Mixes easily with general R code and other libraries
 	\EIT
@@ -231,11 +254,13 @@
 
 \section{Examples}
 
-\begin{frame}{Example: Ordinary Least Squares (OLS)}
-	TODO: Mathematical definition of problem?
-\end{frame}
-
-\begin{frame}[fragile]{Example: Ordinary Least Squares (OLS)}
+\begin{frame}[fragile]{Ordinary Least Squares (OLS)}
+	\BIT
+		\item minimize $||X\beta - y||_2^2$
+		\item $\beta \in \reals^m$ is variable, $X$ and $y$ are constants
+	\EIT
+	
+	\pause
 	\begin{verbatim}
 	library(cvxr)
 	beta <- Variable(m)
@@ -248,11 +273,15 @@
 	
 	\BIT
 		\item \verb|X| and \verb|y| are constants; \verb|beta|, \verb|obj|, and \verb|prob| are S4 objects
-		\item \verb|solve| method canonicalizes, solves, and returns a list with final objective and optimal value of each variable
+		\item \verb|solve| method returns a list that includes optimal \verb|beta|
 	\EIT
 \end{frame}
 
-\begin{frame}[fragile]{Example: Non-Negative Least Squares}
+\begin{frame}[fragile]{Non-Negative Least Squares}
+	\BIT
+	\item minimize $||X\beta - y||_2^2$ subject to $\beta \geq 0$
+	\EIT
+	\pause
 	\begin{verbatim}
 	constr <- list(beta >= 0)
 	prob2 <- Problem(Minimize(obj), constr)
@@ -262,13 +291,14 @@
 	\end{verbatim}
 	
 	\BIT
-		\item Extend prior example by requiring \verb|beta| to be non-negative
 		\item Construct new problem with list \verb|constr| of constraints formed from constants and variables
 		\item Variables, parameters, expressions, and constraints exist outside of any problem
 	\EIT
 \end{frame}
 
-\begin{frame}{Results: Non-Negative Least Squares}
+\begin{frame}{Non-Negative Least Squares}
+	%Change the title and legend to be consistent
+	%Add plot before this with just true beta and least squares
 	\vfill
 	\begin{figure}
 		\includegraphics[width=1\textwidth]{figs/nnls.png}
@@ -276,7 +306,8 @@
 	\vfill
 \end{frame}
 
-\begin{frame}[fragile]{Overview: Huber Regression}
+\iffalse
+\begin{frame}[fragile]{Huber Regression}
 	\[
 	\begin{array}{ll}
 	\mbox{minimize} & \sum_i^n \phi(y_i - \beta^T x_i)
@@ -296,8 +327,10 @@
 		\item Better fit when data contains outliers
 	\EIT
 \end{frame}
+\fi
 
-\begin{frame}[fragile]{Example: Huber Regression}
+\iffalse
+\begin{frame}[fragile]{Huber Regression}
 	\begin{verbatim}
 	beta = Variable(m)
 	cost = SumEntries(Huber(y - X %*% beta, 1))
@@ -313,48 +346,47 @@
 		\item Compare with OLS and prescient regression where sign changes are known
 	\EIT
 \end{frame}
+\fi
 
-\begin{frame}{Results: Huber Regression}
+\iffalse
+\begin{frame}{Relative Reconstruction Error}
 	\vfill
 	\begin{figure}
 		\includegraphics[width=1\textwidth]{figs/huber1.png}
 	\end{figure}
 	\vfill
 \end{frame}
+\fi
 
-\begin{frame}{Results: Huber Regression}
+\iffalse
+\begin{frame}{Relative Reconstruction Error}
 	\vfill
 	\begin{figure}
 		\includegraphics[width=1\textwidth]{figs/huber2.png}
 	\end{figure}
 	\vfill
 \end{frame}
+\fi
 
-\begin{frame}{Overview: Direct Standardization}
+\begin{frame}{Direct Standardization}
+	%Given non-uniform samples $X,y$ and known expectations for features in $X$, guess distribution of $y$
 	\BIT
-	\item TODO: Overview of problem
+		\item Samples $(X,y)$ drawn \textbf{non-uniformly} from a distribution
+		\item Expectations of features in $X$ are a known quantity $b \in \reals^m$
+		\item Want to predict probability $p_i$ for each sample
+		\item Choose $p_i$ to match known expectations, while maximizing total entropy
 	\EIT
-\end{frame}
-
-\begin{frame}{Overview: Direct Standardization}
+	
+	\pause
 	\[
-	\begin{array}{ll} \mbox{maximize} & \sum_i^n p_i \log p_i \\
-	\mbox{subject to} & p \geq 0, \sum_i^n p_i = 1\\
-	& Ap = b
+	\begin{array}{ll} \mbox{maximize} & \sum_i^n \mbox{entr}(p_i) \\
+	\mbox{subject to} & p \geq 0 \quad \ones^Tp = 1 \quad X^Tp = b
 	\end{array}
 	\]
-	with variable $p \in \reals^n$
 	
 	\BIT
-	\item Probabilities $p$ must be non-negative and sum to 1
-	\item $Ap = b$ represents distributional knowledge about some attributes, e.g. expected value, CDF in given range, etc
-	\item Maximizing negative entropy without constraint $Ap = b$ yields uniform distribution
-	\EIT
-\end{frame}
-
-\begin{frame}{Example: Direct Standardization}
-	\BIT
-	\item TODO: Specific data we generate for example
+	\item $\mbox{entr}(p) = -p_i \log p_i$
+	\item $(p_i,y_i)$ is a guess of true distribution
 	\EIT
 \end{frame}
 
@@ -363,7 +395,7 @@
 	probs <- Variable(n)
 	cost <- SumEntries(Entr(probs))
 	constr <- list(probs >= 0, SumEntries(probs) == 1, 
-				   t(X[,1]) %*% probs == 0.5)
+				   t(X) %*% probs == b)
 	prob <- Problem(Maximize(cost), constr)
 	solution <- solve(prob)
 	solution$probs
@@ -375,10 +407,14 @@
 \end{frame}
 
 \begin{frame}{Results: Direct Standardization}
+	TODO: Plot of CDF from original and skewed
+\end{frame}
+
+\begin{frame}{Results: Direct Standardization}
 	TODO: Plot of CDF from original, skewed, and estimated distributions
 \end{frame}
 
-\section{Disciplined Convex Programming}
+%\section{Disciplined Convex Programming}
 
 \iffalse
 \begin{frame}{Curvature: Convex, Concave, and Affine functions}
@@ -421,6 +457,7 @@
 \end{frame}
 \fi
 
+\iffalse
 \begin{frame}{Disciplined Convex Programming (DCP)}
 	(\emph{Grant, Boyd, Ye, 2006})
 	
@@ -436,13 +473,13 @@
 	\EIT
 	\vfill
 \end{frame}
+\fi
 
 \section{Future Work}
 \begin{frame}{Future Work}
 	\BIT
 		\item More solvers - SCS, CVXOPT, etc
 		\item More convex functions and constraints
-		\item Domain-specific language for defining new operators
 		\item Warm start to speed up convergence
 	\EIT
 \end{frame}
