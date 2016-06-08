@@ -1,0 +1,237 @@
+\documentclass{beamer}
+\usepackage{graphicx,psfrag,color,upquote}
+\usepackage{lmodern}
+
+\input talk_defs.tex
+\input formatting.tex
+
+\mode<presentation>
+{
+\usetheme{default}
+}
+
+\newcommand{\dist}{\mathop{\bf dist{}}}
+
+% \raggedright
+% \special{! TeXDict begin /landplus90{true}store end }
+% \definecolor{bluegray}{rgb}{0.15,0.20,0.40}
+% \definecolor{bluegraylight}{rgb}{0.35,0.40,0.60}
+% \definecolor{medgray}{rgb}{0.4,0.4,0.4}
+% \definecolor{gray}{rgb}{0.35,0.35,0.35}
+% \definecolor{lightgray}{rgb}{0.7,0.7,0.7}
+\definecolor{darkblue}{rgb}{0.2,0.2,1.0}
+\definecolor{darkgreen}{rgb}{0.0,0.5,0.3}
+%\definecolor{greengray}{rgb}{0.05,0.20,0.05}
+%\newcommand{\BGE}[1]{\textbf{\textcolor{bluegray}{#1}}} %bluegray emph
+%\renewcommand{\labelitemi}{\textcolor{red}\textbullet}
+%\renewcommand{\labelitemii}{\textcolor{red}{--}}
+%\renewcommand{\end{frame} \begin{frame}}[1]{\foilhead[-1.0cm]{#1}}
+%\newcommand{\end{frame} \begin{frame}}[1]{\foilhead[-1.0cm]{\textcolor{red}{#1}}}
+
+\definecolor{pdefvalue}{rgb}{0.467,0.000,0.533}
+\newcommand{\pdefvalue}[1]{\textcolor{pdefvalue}{#1}}
+\definecolor{pdefidentifier}{rgb}{0.000,0.000,0.000}
+\newcommand{\pdefidentifier}[1]{\textcolor{pdefidentifier}{#1}}
+\definecolor{pdefcomment}{rgb}{0.502,0.502,0.502}
+\newcommand{\pdefcomment}[1]{\textcolor{pdefcomment}{#1}}
+\definecolor{pdefblock}{rgb}{0.267,0.533,0.867}
+\newcommand{\pdefblock}[1]{\textcolor{pdefblock}{#1}}
+\definecolor{pdeferror}{rgb}{0.667,0.000,0.000}
+\newcommand{\pdeferror}[1]{\textcolor{pdeferror}{#1}}
+\definecolor{pdefequals}{rgb}{0.000,0.490,0.000}
+\newcommand{\pdefequals}[1]{\textcolor{pdefequals}{#1}}
+\definecolor{pdefdim}{rgb}{0.973,0.502,0.090}
+\newcommand{\pdefdim}[1]{\textcolor{pdefdim}{#1}}
+\definecolor{pdefattr}{rgb}{0.000,0.000,0.467}
+\newcommand{\pdefattr}[1]{\textcolor{pdefattr}{#1}}
+\definecolor{pdefconstr}{rgb}{0.000,0.000,0.000}
+\newcommand{\pdefconstr}[1]{\textcolor{pdefconstr}{#1}}
+\definecolor{pdefobjv}{rgb}{0.000,0.000,0.000}
+\newcommand{\pdefobjv}[1]{\textcolor{pdefobjv}{#1}}
+\definecolor{pdefconstrsign}{rgb}{0.000,0.000,0.800}
+\newcommand{\pdefconstrsign}[1]{\textcolor{pdefconstrsign}{#1}}
+\definecolor{pdefrange}{rgb}{0.333,0.467,0.200}
+\newcommand{\pdefrange}[1]{\textcolor{pdefrange}{#1}}
+\definecolor{pdefindex}{rgb}{0.333,0.467,0.200}
+\newcommand{\pdefindex}[1]{\textcolor{pdefindex}{#1}}
+\definecolor{pdefbrackets}{rgb}{0.333,0.467,0.200}
+\newcommand{\pdefbrackets}[1]{\textcolor{pdefbrackets}{#1}}
+\definecolor{pdefsemicolon}{rgb}{0.133,0.400,0.800}
+\newcommand{\pdefsemicolon}[1]{\textcolor{pdefsemicolon}{#1}}
+\definecolor{pdeffunction}{rgb}{0.000,0.333,0.667}
+\newcommand{\pdeffunction}[1]{\textcolor{pdeffunction}{#1}}
+\definecolor{pdefdenom}{rgb}{0.000,0.333,0.667}
+\newcommand{\pdefdenom}[1]{\textcolor{pdefdenom}{#1}}
+\definecolor{pdefsparseindices}{rgb}{0.667,0.000,0.533}
+\newcommand{\pdefsparseindices}[1]{\textcolor{pdefsparseindices}{#1}}
+
+\title{Disciplined Convex Optimization with CVXR}
+
+
+\author{\textbf{Anqi Fu} \and Bala Narasimhan \and Stephen Boyd \\[2ex]
+	EE \& Statistics Departments\\[1ex]
+	Stanford University}
+\date{useR! Conference 2016}
+
+\begin{document}
+	
+\begin{frame}
+	\titlepage
+\end{frame}
+	
+\begin{frame}{Outline}
+	\tableofcontents
+\end{frame}
+
+\section{Convex Optimization}
+
+\begin{frame}{Convex Optimization}% problem --- standard form}
+	
+	\[
+	\begin{array}{ll} \mbox{minimize} & f_0(x)\\
+	\mbox{subject to} & f_i(x) \leq 0, \quad i=1, \ldots, m\\
+	& Ax=b
+	\end{array}
+	\]
+	with variable $x \in \reals^n$
+	
+	\BIT
+	\item Objective and inequality constraints $f_0, \ldots, f_m$ are convex %\\[1ex]
+	%for all $x$, $y$, $\theta \in [0,1]$,
+	%\[
+	%f_i(\theta x + (1-\theta) y) \leq \theta f_i(x) + (1-\theta) f_i(y)
+	%\]
+	%\ie, graphs of $f_i$ curve upward
+	\item Equality constraints are linear
+	\EIT
+	\pause
+	
+	\vfill
+	Why?
+	\BIT
+	\item We can solve convex optimization problems
+	\item There are many applications in many fields
+	\EIT
+	
+\end{frame}
+
+\iffalse
+\begin{frame}{Examples}
+	\BIT
+	\item least-squares, least-squares with $\ell_1$ regularization (lasso)
+	\item linear program (LP), quadratic program (QP)
+	\item second-order cone program (SOCP)
+	\item semidefinite program (SDP)
+	\item maximum entropy and related problems
+	\item support vector machine
+	\EIT
+\end{frame}
+\fi
+
+\iffalse
+\begin{frame}{Convex optimization problem --- conic form}
+	cone program:
+	\[
+	\begin{array}{ll} \mbox{minimize} & c^Tx\\
+	\mbox{subject to} & Ax = b, \quad x \in \mathcal K
+	\end{array}
+	\]
+	with variable $x \in \reals^n$
+	
+	\BIT
+	\item linear objective, equality constraints;
+	$\mathcal K$ is convex cone
+	%\BIT
+	%\item $x \in \mathcal K$ is a generalized nonnegativity constraint
+	%\EIT
+	\item special cases:
+	\BIT
+	\item linear program (LP)
+	%second-order cone program (SOCP): $\mathcal K = $
+	%$\mathcal K=\symm^n_{+}$: %(PSD matrices)
+	\item semidefinite program (SDP)
+	\EIT
+	\vfill
+	\item the modern canonical form
+	\item \emph{there are well developed solvers for cone programs}
+	\EIT
+\end{frame}
+\fi
+
+\iffalse
+\begin{frame}{Why convex optimization?}
+	
+	\BIT
+	\item beautiful, fairly complete, and useful theory
+	%\pause
+	\item solution algorithms that work well in theory and practice
+	\BIT
+	\item convex optimization is \textbf{actionable}
+	\EIT
+	%\pause
+	\item \textbf{many applications} in
+	\BIT
+	\item control
+	\item combinatorial optimization
+	\item signal and image processing
+	\item communications, networks
+	\item circuit design
+	\item machine learning, statistics
+	\item finance
+	\EIT
+	%\ldots and many more
+	\EIT
+\end{frame}
+\fi
+
+\iffalse
+\begin{frame}{How do you solve a convex problem?}
+	
+	\BIT\itemsep 20pt
+	\item use an existing custom solver for your specific problem
+	%(\eg, SVM, lasso)
+	%\item write your own (custom) solver
+	%\BIT
+	%\item lots of work, but can take advantage of special structure
+	%\item commonly done in machine learning
+	%\EIT
+	\item develop a new solver for your problem using a currently
+	fashionable method
+	%(mirror descent, Nesterov acceleration, Frank-Wolf \ldots)
+	\BIT
+	\item requires work
+	\item but (with luck) will scale to large problems
+	\EIT
+	\item transform your problem into a cone program,
+	and use a standard cone program solver
+	\BIT
+	\item can be \emph{automated} using \emph{domain specific languages}
+	\item CVX, YALMIP, CVXPY, Convex.jl
+	\EIT
+	
+	%\BIT
+	%\item extends reach of problems solvable by standard solvers
+	%\item transformation can be hard to find, cumbersome to carry out
+	%\EIT
+	%\item \textbf{this talk:} methods to formalize and automate last
+	%approach
+	\EIT
+\end{frame}
+\fi
+
+\section{CVXR}
+
+\begin{frame}{CVXR}
+	% Math isn't new. What's new is ability to implement in a few lines of a clear code.
+	A modeling language in R for convex optimization
+	
+	\BIT
+	\item Open source down to the solvers
+	\item Uses disciplined convex programming to verify convexity
+	\item Supports parameters, multiple constraints
+	\item Mixes easily with general R code and other libraries
+	\EIT
+	
+\end{frame}
+
+\end{document}
