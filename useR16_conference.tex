@@ -117,7 +117,8 @@
 \begin{frame}{Convex Problems in Statistics}
 	%Existing packages for these, but new methods every years (see SigKDD)
 	\BIT
-		\item Least squares, ridge and lasso regression, non-negative least squares 
+		\item (Non-negative) Least squares
+		\item Ridge and lasso regression
 		\item Isotonic regression
 		\item Logistic regression
 		\item Huber (robust) regression
@@ -277,7 +278,7 @@
 	\EIT
 \end{frame}
 
-\begin{frame}[fragile]{Non-Negative Least Squares}
+\begin{frame}[fragile]{Non-Negative Least Squares (NNLS)}
 	\BIT
 	\item minimize $||X\beta - y||_2^2$ subject to $\beta \geq 0$
 	\EIT
@@ -296,12 +297,18 @@
 	\EIT
 \end{frame}
 
-\begin{frame}{Non-Negative Least Squares}
-	%Change the title and legend to be consistent
-	%Add plot before this with just true beta and least squares
+\begin{frame}{True Coefficients vs. OLS}
 	\vfill
 	\begin{figure}
-		\includegraphics[width=1\textwidth]{figs/nnls.png}
+		\includegraphics[width=1\textwidth]{figs/nnls1.png}
+	\end{figure}
+	\vfill
+\end{frame}
+
+\begin{frame}{True Coefficients vs. NNLS}
+	\vfill
+	\begin{figure}
+		\includegraphics[width=1\textwidth]{figs/nnls2.png}
 	\end{figure}
 	\vfill
 \end{frame}
@@ -373,7 +380,7 @@
 	\BIT
 		\item Samples $(X,y)$ drawn \textbf{non-uniformly} from a distribution
 		\item Expectations of features in $X$ are a known quantity $b \in \reals^m$
-		\item Want to predict probability $p_i$ for each sample
+		\item Want to predict probability $p \in \reals^n$ for all samples
 		\item Choose $p_i$ to match known expectations, while maximizing total entropy
 	\EIT
 	
@@ -386,11 +393,11 @@
 	
 	\BIT
 	\item $\mbox{entr}(p) = -p_i \log p_i$
-	\item $(p_i,y_i)$ is a guess of true distribution
+	\item $(y,p)$ is a guess of true response distribution
 	\EIT
 \end{frame}
 
-\begin{frame}[fragile]{Example: Direct Standardization}
+\begin{frame}[fragile]{Direct Standardization}
 	\begin{verbatim}
 	probs <- Variable(n)
 	cost <- SumEntries(Entr(probs))
@@ -402,15 +409,16 @@
 	\end{verbatim}
 	
 	\BIT
+		\item \verb|Entr| is elementwise entropy function
 		\item TODO: Details about code, constraint on fraction of women
 	\EIT
 \end{frame}
 
-\begin{frame}{Results: Direct Standardization}
+\begin{frame}{True vs. Uniform Distribution}
 	TODO: Plot of CDF from original and skewed
 \end{frame}
 
-\begin{frame}{Results: Direct Standardization}
+\begin{frame}{True vs. Estimated Distribution}
 	TODO: Plot of CDF from original, skewed, and estimated distributions
 \end{frame}
 
