@@ -119,8 +119,8 @@
 	\BIT
 		\item (Non-negative) Least squares
 		\item Ridge and lasso regression
-		\item Isotonic regression
 		\item Logistic regression
+		\item Isotonic regression
 		\item Huber (robust) regression
 		\item Maximum entropy and related problems
 		\item Support vector machines
@@ -129,13 +129,22 @@
 	\EIT
 \end{frame}
 
-\begin{frame}{Domain Specific Languages for Convex Optimization}
-	%What's changed in last ~10 years is DSLs. Not necessary to descend to gradient or Hessian level. Tens of thousands of people use these packages.
+\begin{frame}[fragile]{Domain Specific Languages}
+	% What's changed in last ~10 years is DSLs. Not necessary to descend to gradient or Hessian level. Tens of thousands of people use these packages.
 	\BIT
 		\item CVX, CVXPY, YALMIP, Convex.jl
-		\item Slower than custom code, but extremely flexible, fast prototyping, etc
-		\item TODO: CVXPY snippet
+		\item Slower than custom code, but extremely flexible and enables fast prototyping
 	\EIT
+	
+	\pause
+	\begin{verbatim}
+	from cvxpy import *
+	beta = Variable(n)
+	cost = norm(y - X * beta)
+	prob = Problem(Minimize(cost))
+	prob.solve()
+	beta.value
+	\end{verbatim}
 \end{frame}
 
 \iffalse
@@ -379,8 +388,8 @@
 	%Given non-uniform samples $X,y$ and known expectations for features in $X$, guess distribution of $y$
 	\BIT
 		\item Samples $(X,y)$ drawn \textbf{non-uniformly} from a distribution
-		\item Expectations of features in $X$ are a known quantity $b \in \reals^m$
-		\item Want to predict probability $p \in \reals^n$ for all samples
+		\item Expectations of features of $X$ are a known quantity $b \in \reals^m$
+		\item Want to estimate probability $p \in \reals^n$ for all samples
 		\item Choose $p_i$ to match known expectations, while maximizing total entropy
 	\EIT
 	
@@ -393,7 +402,7 @@
 	
 	\BIT
 	\item $\mbox{entr}(p) = -p_i \log p_i$
-	\item $(y,p)$ is a guess of true response distribution
+	\item $(y,p)$ is an estimate of true distribution of the response
 	\EIT
 \end{frame}
 
@@ -409,17 +418,25 @@
 	\end{verbatim}
 	
 	\BIT
-		\item \verb|Entr| is elementwise entropy function
-		\item TODO: Details about code, constraint on fraction of women
+		\item \verb|Entr| is the elementwise entropy function
+		\item \verb|solution$probs| is an R vector of sample probabilities
 	\EIT
 \end{frame}
 
-\begin{frame}{True vs. Uniform Distribution}
-	TODO: Plot of CDF from original and skewed
+\begin{frame}{True vs. Sample Cumulative Distribution}
+	\vfill
+	\begin{figure}
+		\includegraphics[width=1\textwidth]{figs/dstand1.png}
+	\end{figure}
+	\vfill
 \end{frame}
 
-\begin{frame}{True vs. Estimated Distribution}
-	TODO: Plot of CDF from original, skewed, and estimated distributions
+\begin{frame}{True vs. Estimated Cumulative Distribution}
+	\vfill
+	\begin{figure}
+		\includegraphics[width=1\textwidth]{figs/dstand2.png}
+	\end{figure}
+	\vfill
 \end{frame}
 
 %\section{Disciplined Convex Programming}
