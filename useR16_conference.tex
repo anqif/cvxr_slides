@@ -117,30 +117,32 @@
 \begin{frame}{Convex Problems in Statistics}
 	%Existing packages for these, but new methods every years (see SigKDD)
 	\BIT
-		\item (Non-negative) Least squares
+		\item Least squares, nonnegative least squares
 		\item Ridge and lasso regression
-		\item Logistic regression
 		\item Isotonic regression
 		\item Huber (robust) regression
-		\item Maximum entropy and related problems
-		\item Support vector machines
+		\item Logistic regression
+		\item Support vector machine
 		\item Sparse inverse covariance
+		\item Maximum entropy and related problems
 		\item \ldots and new methods being invented every year!
 	\EIT
 \end{frame}
 
-\begin{frame}[fragile]{Domain Specific Languages}
+\begin{frame}[fragile]{Domain Specific Languages for Convex Optimization}
 	% What's changed in last ~10 years is DSLs. Not necessary to descend to gradient or Hessian level. Tens of thousands of people use these packages.
 	\BIT
-		\item CVX, CVXPY, YALMIP, Convex.jl
-		\item Slower than custom code, but extremely flexible and enables fast prototyping
+\item Special languages/packages for general convex optimization
+	\item CVX, CVXPY, YALMIP, Convex.jl
+	\item Slower than custom code, but extremely flexible and
+enables fast prototyping
 	\EIT
 	
 	\pause
 	\begin{verbatim}
 	from cvxpy import *
 	beta = Variable(n)
-	cost = norm(y - X * beta)
+	cost = norm(X * beta - y)
 	prob = Problem(Minimize(cost))
 	prob.solve()
 	beta.value
@@ -255,8 +257,9 @@
 	A modeling language in R for convex optimization
 	
 	\BIT
-		\item Connects to many open source solvers
-		%\item Uses disciplined convex programming to verify convexity
+		\item Will connect to many open source solvers
+		\item Uses disciplined convex programming to 
+verify convexity
 		\item Supports parameters, multiple constraints
 		\item Mixes easily with general R code and other libraries
 	\EIT
@@ -306,7 +309,7 @@
 	\EIT
 \end{frame}
 
-\begin{frame}{True Coefficients vs. OLS}
+\begin{frame}{Example: True Coefficients and OLS Estimate}
 	\vfill
 	\begin{figure}
 		\includegraphics[width=1\textwidth]{figs/nnls1.png}
@@ -314,7 +317,7 @@
 	\vfill
 \end{frame}
 
-\begin{frame}{True Coefficients vs. NNLS}
+\begin{frame}{True Coefficients and NNLS Estimate}
 	\vfill
 	\begin{figure}
 		\includegraphics[width=1\textwidth]{figs/nnls2.png}
@@ -388,9 +391,11 @@
 	%Given non-uniform samples $X,y$ and known expectations for features in $X$, guess distribution of $y$
 	\BIT
 		\item Samples $(X,y)$ drawn \textbf{non-uniformly} from a distribution
-		\item Expectations of features of $X$ are a known quantity $b \in \reals^m$
-		\item Want to estimate probability $p \in \reals^n$ for all samples
-		\item Choose $p_i$ to match known expectations, while maximizing total entropy
+		\item Expectations of features of $X$ are known $b \in \reals^m$
+		\item We'll estimate probability $p \in \reals^n$
+for all samples
+		\item Choose $p_i$ to match known expectations, 
+maximize entropy
 	\EIT
 	
 	\pause
@@ -503,9 +508,9 @@
 \section{Future Work}
 \begin{frame}{Future Work}
 	\BIT
-		\item More solvers - SCS, CVXOPT, etc
-		\item More convex functions and constraints
-		\item Warm start to speed up convergence
+		\item Connect to more solvers: SCS, CVXOPT, \ldots
+		\item Flesh out convex functions in library
+		\item Add warm start support
 	\EIT
 \end{frame}
 
