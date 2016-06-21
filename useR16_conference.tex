@@ -88,14 +88,14 @@
 	
 	\[
 	\begin{array}{ll} \mbox{minimize} & f_0(x)\\
-	\mbox{subject to} & f_i(x) \leq 0, \quad i=1, \ldots, m\\
+	\mbox{subject to} & f_i(x) \leq 0, \quad i=1, \ldots, M\\
 	& Ax=b
 	\end{array}
 	\]
 	with variable $x \in \reals^n$
 	
 	\BIT
-		\item Objective and inequality constraints $f_0, \ldots, f_m$ are convex %\\[1ex]
+		\item Objective and inequality constraints $f_0, \ldots, f_M$ are convex %\\[1ex]
 		%for all $x$, $y$, $\theta \in [0,1]$,
 		%\[
 		%f_i(\theta x + (1-\theta) y) \leq \theta f_i(x) + (1-\theta) f_i(y)
@@ -115,7 +115,7 @@
 \end{frame}
 
 \begin{frame}{Convex Problems in Statistics}
-	%Existing packages for these, but new methods every years (see SigKDD)
+	% Existing packages for these, but new methods every year (see SigKDD)
 	\BIT
 		\item Least squares, nonnegative least squares
 		\item Ridge and lasso regression
@@ -260,7 +260,6 @@ enables fast prototyping
 		\item Will connect to many open source solvers
 		\item Uses disciplined convex programming to 
 verify convexity
-		\item Supports parameters, multiple constraints
 		\item Mixes easily with general R code and other libraries
 	\EIT
 \end{frame}
@@ -270,13 +269,13 @@ verify convexity
 \begin{frame}[fragile]{Ordinary Least Squares (OLS)}
 	\BIT
 		\item minimize $||X\beta - y||_2^2$
-		\item $\beta \in \reals^m$ is variable, $X$ and $y$ are constants
+		\item $\beta \in \reals^n$ is variable, $X \in \reals^{m \times n}$ and $y \in \reals^m$ are constants
 	\EIT
 	
 	\pause
 	\begin{verbatim}
 	library(cvxr)
-	beta <- Variable(m)
+	beta <- Variable(n)
 	obj <- SumSquares(y - X %*% beta)
 	prob <- Problem(Minimize(obj))
 	solution <- solve(prob)
@@ -309,7 +308,7 @@ verify convexity
 	\EIT
 \end{frame}
 
-\begin{frame}{Example: True Coefficients and OLS Estimate}
+\begin{frame}{True Coefficients and OLS Estimate}
 	\vfill
 	\begin{figure}
 		\includegraphics[width=1\textwidth]{figs/nnls1.png}
@@ -391,40 +390,37 @@ verify convexity
 	%Given non-uniform samples $X,y$ and known expectations for features in $X$, guess distribution of $y$
 	\BIT
 		\item Samples $(X,y)$ drawn \textbf{non-uniformly} from a distribution
-		\item Expectations of features of $X$ are known $b \in \reals^m$
-		\item We'll estimate probability $p \in \reals^n$
-for all samples
-		\item Choose $p_i$ to match known expectations, 
+		\item Expectations of columns of $X$ have known values $b \in \reals^n$
+		
+		\pause
+		\item Empirical distribution $y = y_i$ w.p. $1/m$ is \textbf{not} a good estimate of distribution of $y$
+		\item Let's use weighted empirical distribution $y = y_i$ w.p. $w_i$
+		% \item Let's weight the samples with $w = (w_1,\ldots,w_n)$
+		\item Choose $w = (w_1,\ldots,w_m)$ to match known expectations, 
 maximize entropy
 	\EIT
 	
-	\pause
 	\[
-	\begin{array}{ll} \mbox{maximize} & \sum_i^n \mbox{entr}(p_i) \\
-	\mbox{subject to} & p \geq 0 \quad \ones^Tp = 1 \quad X^Tp = b
+	\begin{array}{ll} \mbox{maximize} & \sum_i^m -w_i \log w_i \\
+	\mbox{subject to} & w \geq 0 \quad \ones^Tw = 1 \quad X^Tw = b
 	\end{array}
 	\]
-	
-	\BIT
-	\item $\mbox{entr}(p_i) = -p_i \log p_i$
-	\item $(y,p)$ is an estimate of the true sampling distribution of the response variable
-	\EIT
 \end{frame}
 
 \begin{frame}[fragile]{Direct Standardization}
 	\begin{verbatim}
-	probs <- Variable(n)
-	cost <- SumEntries(Entr(probs))
-	constr <- list(probs >= 0, SumEntries(probs) == 1, 
-				   t(X) %*% probs == b)
-	prob <- Problem(Maximize(cost), constr)
-	solution <- solve(prob)
-	solution$probs
+	w <- Variable(m)
+	obj <- SumEntries(Entr(w))
+	constr <- list(w >= 0, SumEntries(w) == 1, 
+				   t(X) %*% w == b)
+	w <- Problem(Maximize(obj), constr)
+	solution <- solve(w)
+	solution$w
 	\end{verbatim}
 	
 	\BIT
 		\item \verb|Entr| is the elementwise entropy function
-		\item \verb|solution$probs| is an R vector of sample probabilities
+		\item \verb|solution$w| is an R vector of weights
 	\EIT
 \end{frame}
 
@@ -510,6 +506,7 @@ maximize entropy
 	\BIT
 		\item Connect to more solvers: SCS, CVXOPT, \ldots
 		\item Flesh out convex functions in library
+		\item Develop more applications and examples
 		\item Add warm start support
 	\EIT
 \end{frame}
