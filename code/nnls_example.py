@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy.linalg import toeplitz
 from cvxpy import *
 
-# Problem data
+# Generate problem data
 s = 1
 m = 10
 n = 30
@@ -25,12 +25,12 @@ b = np.array([0, 0.8, 0, 1, 0.2, 0, 0.4, 1, 0, 0.7]).T
 y = np.dot(X, b) + np.random.normal(0, s, n)
 print 'True coefficients\n', b
 
-# Construct the problem without constraints
+# Construct the unconstrained OLS problem
 beta = Variable(m)
 objective = Minimize(sum_squares(y - X*beta))
 p = Problem(objective)
 
-# Solve the problem without constraints
+# Solve for the OLS beta coefficients
 result = p.solve()
 fit1 = np.dot(X,beta.value)
 beta1 = np.squeeze(np.asarray(beta.value))
