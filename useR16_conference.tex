@@ -257,7 +257,7 @@ enables fast prototyping
 	A modeling language in R for convex optimization
 	
 	\BIT
-		\item Will connect to many open source solvers
+		\item Connects to many open source solvers
 		\item Uses disciplined convex programming to 
 verify convexity
 		\item Mixes easily with general R code and other libraries
@@ -274,18 +274,18 @@ verify convexity
 	
 	\pause
 	\begin{verbatim}
-	library(cvxr)
+	library(CVXR)
 	beta <- Variable(n)
-	obj <- SumSquares(y - X %*% beta)
+	obj <- sum_squares(y - X %*% beta)
 	prob <- Problem(Minimize(obj))
-	solution <- solve(prob)
-	solution$opt_val
-	solution$beta
+	result <- solve(prob)
+	solution$value
+	solution$getValue(beta)
 	\end{verbatim}
 	
 	\BIT
 		\item \verb|X| and \verb|y| are constants; \verb|beta|, \verb|obj|, and \verb|prob| are S4 objects
-		\item \verb|solve| method returns a list that includes optimal \verb|beta|
+		\item \verb|solve| method returns a list that includes optimal \verb|beta| and objective \verb|value|
 	\EIT
 \end{frame}
 
@@ -297,9 +297,9 @@ verify convexity
 	\begin{verbatim}
 	constr <- list(beta >= 0)
 	prob2 <- Problem(Minimize(obj), constr)
-	solution2 <- solve(prob2)
-	solution2$opt_val
-	solution2$beta
+	result2 <- solve(prob2)
+	result2$value
+	result2$getValue(beta)
 	\end{verbatim}
 	
 	\BIT
@@ -311,7 +311,7 @@ verify convexity
 \begin{frame}{True Coefficients and OLS Estimate}
 	\vfill
 	\begin{figure}
-		\includegraphics[width=1\textwidth]{figs/nnls1.png}
+		\includegraphics[width=0.9\textwidth]{figs/nnls1.pdf}
 	\end{figure}
 	\vfill
 \end{frame}
@@ -319,7 +319,7 @@ verify convexity
 \begin{frame}{True Coefficients and NNLS Estimate}
 	\vfill
 	\begin{figure}
-		\includegraphics[width=1\textwidth]{figs/nnls2.png}
+		\includegraphics[width=0.9\textwidth]{figs/nnls2.pdf}
 	\end{figure}
 	\vfill
 \end{frame}
@@ -351,11 +351,11 @@ verify convexity
 \begin{frame}[fragile]{Huber Regression}
 	\begin{verbatim}
 	beta = Variable(m)
-	cost = SumEntries(Huber(y - X %*% beta, 1))
+	cost = sum(huber(y - X %*% beta, 1))
 	prob <- Problem(Minimize(cost))
-	solution <- solve(prob)
-	solution$opt_val
-	solution$beta
+	result <- solve(prob)
+	result$value
+	result$getValue(beta)
 	\end{verbatim}
 	
 	\BIT
@@ -387,7 +387,7 @@ verify convexity
 \fi
 
 \begin{frame}{Direct Standardization}
-	%Given non-uniform samples $X,y$ and known expectations for features in $X$, guess distribution of $y$
+	% Given non-uniform samples $X,y$ and known expectations for features in $X$, guess distribution of $y$
 	\BIT
 		\item Samples $(X,y)$ drawn \textbf{non-uniformly} from a distribution
 		\item Expectations of columns of $X$ have known values $b \in \reals^n$
@@ -410,17 +410,16 @@ maximize entropy
 \begin{frame}[fragile]{Direct Standardization}
 	\begin{verbatim}
 	w <- Variable(m)
-	obj <- SumEntries(Entr(w))
-	constr <- list(w >= 0, SumEntries(w) == 1, 
-				   t(X) %*% w == b)
-	w <- Problem(Maximize(obj), constr)
-	solution <- solve(w)
-	solution$w
+	obj <- sum(entr(w))
+	constr <- list(w >= 0, sum(w) == 1, t(X) %*% w == b)
+	prob <- Problem(Maximize(obj), constr)
+	result <- solve(prob)
+	result$getValue(w)
 	\end{verbatim}
 	
 	\BIT
-		\item \verb|Entr| is the elementwise entropy function
-		\item \verb|solution$w| is an R vector of weights
+		\item \verb|entr| is the elementwise entropy function
+		\item \verb|result$getValue(w)| returns an R vector of weights
 	\EIT
 \end{frame}
 
@@ -428,17 +427,17 @@ maximize entropy
 \begin{frame}{True vs. Sample Probability Distribution}
 	\vfill
 	\begin{figure}
-		\includegraphics[width=1\textwidth]{figs/dstand_pdf1.png}
+		\includegraphics[width=0.9\textwidth]{figs/dstand_pdf1.pdf}
 	\end{figure}
 	\vfill
 \end{frame}
 \fi
 
 \iffalse
-\begin{frame}{True vs. Estimated Probability Distribution}
+\begin{frame}{True vs. Weighted Probability Distribution}
 	\vfill
 	\begin{figure}
-		\includegraphics[width=1\textwidth]{figs/dstand_pdf2.png}
+		\includegraphics[width=0.9\textwidth]{figs/dstand_pdf2.pdf}
 	\end{figure}
 	\vfill
 \end{frame}
@@ -447,15 +446,15 @@ maximize entropy
 \begin{frame}{True vs. Sample Cumulative Distribution}
 	\vfill
 	\begin{figure}
-		\includegraphics[width=1\textwidth]{figs/dstand_cdf1.png}
+		\includegraphics[width=0.9\textwidth]{figs/dstand_cdf1.pdf}
 	\end{figure}
 	\vfill
 \end{frame}
 
-\begin{frame}{True vs. Estimated Cumulative Distribution}
+\begin{frame}{True vs. Weighted Cumulative Distribution}
 	\vfill
 	\begin{figure}
-		\includegraphics[width=1\textwidth]{figs/dstand_cdf2.png}
+		\includegraphics[width=0.9\textwidth]{figs/dstand_cdf2.pdf}
 	\end{figure}
 	\vfill
 \end{frame}
@@ -524,11 +523,10 @@ maximize entropy
 \section{Future Work}
 \begin{frame}{Future Work}
 	\BIT
-		\item Connect to more solvers: SCS, CVXOPT, \ldots
+		\item Connect to more solvers: MOSEK, GUROBI, \ldots
 		\item Flesh out convex functions in library
 		\item Develop more applications and examples
 		\item Add warm start support
-		\item Submit package to CRAN
 	\EIT
 	
 	Github repo: \url{https://github.com/anqif/cvxr}
