@@ -70,7 +70,7 @@
 \author{\textbf{Anqi Fu} \and Bala Narasimhan \and Stephen Boyd \\[2ex]
 	EE \& Statistics Departments\\[1ex]
 	Stanford University}
-\date{useR! Conference 2016}
+\date{useR! Conference 2018}
 
 \begin{document}
 	
@@ -325,67 +325,6 @@ verify convexity
 \end{frame}
 
 \iffalse
-\begin{frame}[fragile]{Huber Regression}
-	\[
-	\begin{array}{ll}
-	\mbox{minimize} & \sum_i^n \phi(y_i - \beta^T x_i)
-	\end{array}
-	\]
-	with variable $\beta \in \reals^n$ and Huber function
-	\[
-	\begin{array}{ll}
-	\phi(u) &= \begin{cases} u^2 & |u| \leq 0 \\
-							2Mu - M^2 & |u| > 0 \end{cases}
-	\end{array}
-	\]
-	where $M > 0$ is the threshold
-	\BIT
-		\item TODO: Plot of Huber function?
-		\item Same as OLS for small residuals, allows some large residuals
-		\item Better fit when data contains outliers
-	\EIT
-\end{frame}
-\fi
-
-\iffalse
-\begin{frame}[fragile]{Huber Regression}
-	\begin{verbatim}
-	beta = Variable(m)
-	cost = sum(huber(y - X %*% beta, 1))
-	prob <- Problem(Minimize(cost))
-	result <- solve(prob)
-	result$value
-	result$getValue(beta)
-	\end{verbatim}
-	
-	\BIT
-		\item Generate data and replace fraction $p$ of $y_i$'s with $-y_i$
-		\item Huber regression with threshold of 1, no constraints
-		\item Compare with OLS and prescient regression where sign changes are known
-	\EIT
-\end{frame}
-\fi
-
-\iffalse
-\begin{frame}{Relative Reconstruction Error}
-	\vfill
-	\begin{figure}
-		\includegraphics[width=1\textwidth]{figs/huber1.png}
-	\end{figure}
-	\vfill
-\end{frame}
-\fi
-
-\iffalse
-\begin{frame}{Relative Reconstruction Error}
-	\vfill
-	\begin{figure}
-		\includegraphics[width=1\textwidth]{figs/huber2.png}
-	\end{figure}
-	\vfill
-\end{frame}
-\fi
-
 \begin{frame}{Direct Standardization}
 	% Given non-uniform samples $X,y$ and known expectations for features in $X$, guess distribution of $y$
 	\BIT
@@ -406,7 +345,9 @@ maximize entropy
 	\end{array}
 	\]
 \end{frame}
+\fi
 
+\iffalse
 \begin{frame}[fragile]{Direct Standardization}
 	\begin{verbatim}
 	w <- Variable(m)
@@ -422,6 +363,7 @@ maximize entropy
 		\item \verb|result$getValue(w)| returns an R vector of weights
 	\EIT
 \end{frame}
+\fi
 
 \iffalse
 \begin{frame}{True vs. Sample Probability Distribution}
@@ -443,6 +385,7 @@ maximize entropy
 \end{frame}
 \fi
 
+\iffalse
 \begin{frame}{True vs. Estimated Cumulative Distribution}
 	\vfill
 	\begin{figure}
@@ -450,13 +393,28 @@ maximize entropy
 	\end{figure}
 	\vfill
 \end{frame}
+\fi
 
+\iffalse
 \begin{frame}{True vs. Estimated Cumulative Distribution}
 	\vfill
 	\begin{figure}
 		\includegraphics[width=0.9\textwidth]{figs/dstand_cdf2.pdf}
 	\end{figure}
 	\vfill
+\end{frame}
+\fi
+
+\begin{frame}{Fastest Mixing Markov Chain}
+	\BIT
+		\item TODO: Set up FMMC problem
+	\EIT
+\end{frame}
+
+\begin{frame}{Fastest Mixing Markov Chain}
+	\BIT
+		\item TODO: Code for FMMC problem
+	\EIT
 \end{frame}
 
 %\section{Disciplined Convex Programming}
@@ -523,13 +481,14 @@ maximize entropy
 \section{Future Work}
 \begin{frame}{Future Work}
 	\BIT
-		\item Connect to more solvers: MOSEK, GUROBI, \ldots
 		\item Flesh out convex functions in library
 		\item Develop more applications and examples
 		\item Add warm start support
+		\item Further speed improvements
 	\EIT
 	
-	Github repo: \url{https://github.com/anqif/cvxr}
+	Official site: \url{cvxr.rbind.io} \\
+	CRAN page: \url{CRAN.R-project.org/package=CVXR}
 \end{frame}
 
 \end{document}
