@@ -409,12 +409,46 @@ maximize entropy
 	\BIT
 		\item TODO: Set up FMMC problem
 	\EIT
+	
+	\[
+	\begin{array}{ll} \mbox{minimize} & \lambda_{\max}(P - \frac{1}{n}\ones\ones^{\top}) \\
+	\mbox{subject to} & P \geq 0, \quad P\ones = \ones, \quad P = P^{\top} \\
+	& P_{ij} = 0, \quad (i,j) \notin \mathcal{E}
+	\end{array}
+	\]
 \end{frame}
 
-\begin{frame}{Fastest Mixing Markov Chain}
+\begin{frame}[fragile]{Fastest Mixing Markov Chain}
+	\begin{verbatim}
+	P <- Variable(n,n)
+	obj <- Minimize(lambda_max(P - 1/n))
+	constr <- list(P >= 0, P %*% ones == ones, P == t(P), 
+	+    P[idxs] == 0)
+	prob <- Problem(obj, constr)
+	result <- solve(prob)
+	result$getValue(P)
+	\end{verbatim}
+	
 	\BIT
-		\item TODO: Code for FMMC problem
+		\item \verb|lambda_max| is the maximum eigenvalue function (can also use spectral norm)
+		\item \verb|idxs| is matrix containing all unconnected vertices $(i,j)$
 	\EIT
+\end{frame}
+
+\begin{frame}{Triangle + 1 Edge}
+	\vfill
+	\begin{figure}
+		\includegraphics[width=0.8\textwidth]{figs/fmmc_triangle.pdf}
+	\end{figure}
+	\vfill
+\end{frame}
+
+\begin{frame}{Bipartite 2 + 3}
+	\vfill
+	\begin{figure}
+		\includegraphics[width=0.8\textwidth]{figs/fmmc_bipartite.pdf}
+	\end{figure}
+	\vfill
 \end{frame}
 
 %\section{Disciplined Convex Programming}
