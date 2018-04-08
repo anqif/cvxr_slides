@@ -407,11 +407,17 @@ maximize entropy
 
 \begin{frame}{Fastest Mixing Markov Chain}
 	\BIT
-		\item TODO: Set up FMMC problem
+		\item Connected graph with vertices $\mathcal{V} = \{1,\ldots,n\}$ and edges $\mathcal{E}$
+		\item Each vertex has a self-loop, all edges bidirected
+		\item Find Markov chain with fastest mixing rate
+		
+		\pause 
+		\item Mixing rate is \textbf{monotone} in second largest eigenvalue modulus (SLEM) of transition matrix $P \in \reals^{n \times n}$
+		\item Choose $P$ to minimize SLEM $\mu(P)$, satisfy connectivity
 	\EIT
 	
 	\[
-	\begin{array}{ll} \mbox{minimize} & \lambda_{\max}(P - \frac{1}{n}\ones\ones^{\top}) \\
+	\begin{array}{ll} \mbox{minimize} & \mu(P) = \lambda_{\max}(P - \frac{1}{n}\ones\ones^{\top}) \\
 	\mbox{subject to} & P \geq 0, \quad P\ones = \ones, \quad P = P^{\top} \\
 	& P_{ij} = 0, \quad (i,j) \notin \mathcal{E}
 	\end{array}
