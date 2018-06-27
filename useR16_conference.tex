@@ -1,6 +1,6 @@
 \documentclass{beamer}
 \usepackage{graphicx,psfrag,color,upquote}
-\usepackage{lmodern}
+\usepackage{lmodern,subcaption}
 
 \input talk_defs.tex
 \input formatting.tex
@@ -405,16 +405,96 @@ maximize entropy
 \end{frame}
 \fi
 
-\begin{frame}{Fastest Mixing Markov Chain}
+\begin{frame}{Sparse Inverse Covariance Estimation}
 	\BIT
-		\item TODO: Set up FMMC problem
+		\item Samples $x_i \in \reals^n$ drawn i.i.d. from $N(0,\Sigma)$
+		\item Know covariance $\Sigma \in \symm_+^n$ has \textbf{sparse} inverse $S = \Sigma^{-1}$
+		
+		\pause
+		\item One way to estimate $S$ is by maximizing the log-likelihood with a sparsity constraint:
+	\EIT
+	\[
+		\begin{array}{ll} \underset{S}{\mbox{maximize}} & \log\det(S) - \mbox{tr}(SQ) \\
+			\mbox{subject to} & S \in \symm_+^n, \quad \sum_{i=1}^n \sum_{j=1}^n |S_{ij}| \leq \alpha.
+		\end{array}
+	\]
+	\BIT
+		\item $Q = \frac{1}{m-1}\sum_{i=1}^m (x_i - \bar x)(x_i - \bar x)^{\top}$ is sample covariance
+		\item $\alpha \geq 0$ is a parameter controlling the degree of sparsity
 	\EIT
 \end{frame}
 
-\begin{frame}{Fastest Mixing Markov Chain}
+\begin{frame}[fragile]{Sparse Inverse Covariance Estimation}
+	\begin{verbatim}
+	S <- Semidef(n)
+	obj <- log_det(S) - matrix_trace(S %*% Q)
+	constr <- list(sum(abs(S)) <= alpha)
+	prob <- Problem(Maximize(obj), constr)
+	result <- solve(prob)
+	result$getValue(S)
+	\end{verbatim}
 	\BIT
-		\item TODO: Code for FMMC problem
+		\item \verb|Semidef| restricts variable to positive semidefinite cone
+		\item Must use \verb|log_det(S)| instead of \verb|log(det(S))| since \verb|det| is not a supported atom
+		\item \verb|result$getValue(S)| returns an R matrix
 	\EIT
+\end{frame}
+
+\begin{frame}{True vs. Estimated Sparsity of Inverse}
+	\vfill
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			\begin{center}
+				True Inverse
+				\includegraphics[width=\textwidth]{figs/sparse_cov_true.pdf}
+			\end{center}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			\begin{center}
+				Estimate ($\alpha = 1$)
+				\includegraphics[width=\textwidth]{figs/sparse_cov_alpha1.pdf}
+			\end{center}
+		\end{column}
+	\end{columns}
+	\vfill
+\end{frame}
+
+\begin{frame}{True vs. Estimated Sparsity of Inverse}
+\vfill
+\begin{columns}
+	\begin{column}{0.5\textwidth}
+		\begin{center}
+			True Inverse
+			\includegraphics[width=\textwidth]{figs/sparse_cov_true.pdf}
+		\end{center}
+	\end{column}
+	\begin{column}{0.5\textwidth}
+		\begin{center}
+			Estimate ($\alpha = 6$)
+			\includegraphics[width=\textwidth]{figs/sparse_cov_alpha6.pdf}
+		\end{center}
+	\end{column}
+\end{columns}
+\vfill
+\end{frame}
+
+\begin{frame}{True vs. Estimated Sparsity of Inverse}
+\vfill
+\begin{columns}
+	\begin{column}{0.5\textwidth}
+		\begin{center}
+			True Inverse
+			\includegraphics[width=\textwidth]{figs/sparse_cov_true.pdf}
+		\end{center}
+	\end{column}
+	\begin{column}{0.5\textwidth}
+		\begin{center}
+			Estimate ($\alpha = 10$)
+			\includegraphics[width=\textwidth]{figs/sparse_cov_alpha10.pdf}
+		\end{center}
+	\end{column}
+\end{columns}
+\vfill
 \end{frame}
 
 %\section{Disciplined Convex Programming}
