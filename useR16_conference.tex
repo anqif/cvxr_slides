@@ -258,9 +258,9 @@ enables fast prototyping
 	
 	\BIT
 		\item Connects to many solvers: ECOS, SCS, MOSEK, etc
-		\item Uses disciplined convex programming to 
-verify convexity
 		\item Mixes easily with general R code and other libraries
+		\item Uses disciplined convex programming to 
+		verify convexity
 	\EIT
 \end{frame}
 
@@ -279,8 +279,8 @@ verify convexity
 	obj <- sum_squares(y - X %*% beta)
 	prob <- Problem(Minimize(obj))
 	result <- solve(prob)
-	solution$value
-	solution$getValue(beta)
+	result$value
+	result$getValue(beta)
 	\end{verbatim}
 	
 	\BIT
