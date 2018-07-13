@@ -279,8 +279,8 @@ verify convexity
 	obj <- sum_squares(y - X %*% beta)
 	prob <- Problem(Minimize(obj))
 	result <- solve(prob)
-	solution$value
-	solution$getValue(beta)
+	result$value
+	result$getValue(beta)
 	\end{verbatim}
 	
 	\BIT
