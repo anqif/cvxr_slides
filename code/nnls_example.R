@@ -1,10 +1,11 @@
-library(cvxr)
+library(CVXR)
 library(MASS)
+library(kableExtra)
 
 # Generate problem data
 s <- 1
-m <- 10
-n <- 300
+n <- 10
+m <- 300
 mu <- rep(0, 9)
 Sigma <- data.frame(c(1.6484, -0.2096, -0.0771, -0.4088, 0.0678, -0.6337, 0.9720, -1.2158, -1.3219),
                     c(-0.2096, 1.9274, 0.7059, 1.3051, 0.4479, 0.7384, -0.6342, 1.4291, -0.4723),
@@ -16,32 +17,34 @@ Sigma <- data.frame(c(1.6484, -0.2096, -0.0771, -0.4088, 0.0678, -0.6337, 0.9720
                     c(-1.2158, 1.4291, 0.4776, 2.0076, -0.1715, 1.7536, -1.3587, 2.8789, 0.4094),
                     c(-1.3219, -0.4723, -0.4552, -0.3377, -0.3952, -0.1845, 0.7287, 0.4094, 4.8406))
 
-X <- mvrnorm(n, mu, Sigma)
-X <- cbind(rep(1, n), X)
+X <- mvrnorm(m, mu, Sigma)
+X <- cbind(rep(1, m), X)
 b <- c(0, 0.8, 0, 1, 0.2, 0, 0.4, 1, 0, 0.7)
-y <- X %*% b + rnorm(n, 0, s)
+y <- X %*% b + rnorm(m, 0, s)
 
 # Construct the OLS problem without constraints
-beta <- Variable(m)
-objective <- Minimize(SumSquares(y - X * beta))
-prob <- Problem(objective)
+beta <- Variable(n)
+obj <- sum_squares(y - X %*% beta)
+prob <- Problem(Minimize(obj))
 
 # Solve the OLS problem for beta
-result <- cvxr_solve(prob)
-result$optimal_value
-result$primal_values[[beta@id]]
-beta_ols <- result$primal_values[[beta@id]]
+result <- solve(prob)
+cat("Objective:", result$value)
+
+beta_ols <- result$getValue(beta)
+cat("\nOptimal OLS Beta:", beta_ols)
 
 # Add non-negativity constraint on beta
-constraints <- list(beta >= 0)
-prob2 <- Problem(objective, constraints)
+constr <- list(beta >= 0)
+prob2 <- Problem(Minimize(obj), constr)
 
 # Solve the NNLS problem for beta
-result2 <- cvxr_solve(prob2)
-result2$optimal_value
-result2$primal_values[[beta@id]]
-beta_nnls <- result2$primal_values[[beta@id]]
+result2 <- solve(prob2)
+cat("Objective:", result2$value)
+
+beta_nnls <- result2$getValue(beta)
 all(beta_nnls >= 0)   # All resulting beta should be non-negative
+cat("\nOptimal NNLS Beta:", beta_nnls)
 
 # Calculate the fitted y values
 fit_ols <- X %*% beta_ols

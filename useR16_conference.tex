@@ -70,7 +70,7 @@
 \author{\textbf{Anqi Fu} \and Bala Narasimhan \and Stephen Boyd \\[2ex]
 	EE \& Statistics Departments\\[1ex]
 	Stanford University}
-\date{useR! Conference 2018}
+\date{EE364A, Summer 2020}
 
 \begin{document}
 	
@@ -84,7 +84,7 @@
 
 \section{Convex Optimization}
 
-\begin{frame}{Convex Optimization}% problem --- standard form}
+\begin{frame}{Convex Optimization} % problem --- standard form}
 	
 	\[
 	\begin{array}{ll} \mbox{minimize} & f_0(x)\\
@@ -426,7 +426,7 @@ maximize entropy
 
 \begin{frame}[fragile]{Sparse Inverse Covariance Estimation}
 	\begin{verbatim}
-	S <- Semidef(n)
+	S <- Variable(n, n, PSD = TRUE)
 	obj <- log_det(S) - matrix_trace(S %*% Q)
 	constr <- list(sum(abs(S)) <= alpha)
 	prob <- Problem(Maximize(obj), constr)
@@ -434,7 +434,7 @@ maximize entropy
 	result$getValue(S)
 	\end{verbatim}
 	\BIT
-		\item \verb|Semidef| restricts variable to positive semidefinite cone
+		\item \verb|PSD = TRUE| restricts variable to positive semidefinite cone
 		\item Must use \verb|log_det(S)| instead of \verb|log(det(S))| since \verb|det| is not a supported atom
 		\item \verb|result$getValue(S)| returns an R matrix
 	\EIT
@@ -564,7 +564,6 @@ maximize entropy
 		\item Flesh out convex functions in library
 		\item Develop more applications and examples
 		\item Make connecting new solvers easier
-		\item Add warm start support
 		\item Further speed improvements
 	\EIT
 	
