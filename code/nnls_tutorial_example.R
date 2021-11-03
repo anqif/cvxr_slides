@@ -3,12 +3,13 @@ library(MASS)
 library(ggplot2)
 library(tidyr)
 
+# ---- Plotting functions ----
 gg_color_hue <- function(n) {
   hues = seq(15, 375, length = n + 1)
   hcl(h = hues, l = 65, c = 100)[1:n]
 }
 
-# Generate problem data
+# ---- Problem data ----
 set.seed(1)
 s <- 1
 n <- 10
@@ -28,6 +29,7 @@ X <- cbind(rep(1, m), X)
 beta_true <- c(0, 0.8, 0, 1, 0.2, 0, 0.4, 1, 0, 0.7)
 y <- X %*% beta_true + rnorm(m, 0, s)
 
+# ---- OLS Problem ----
 # Construct the OLS problem without constraints
 beta <- Variable(n)
 obj <- sum_squares(y - X %*% beta)
@@ -51,6 +53,7 @@ beta_plot <- ggplot(data = tidyD, mapping = aes(x = coeff, y = value)) +
   scale_fill_manual(values = gg_color_hue(3)[1:2])
 print(beta_plot)
 
+# ---- NNLS Problem ----
 # Add non-negativity constraint on beta
 constr <- list(beta >= 0)
 prob2 <- Problem(Minimize(obj), constr)
@@ -60,14 +63,14 @@ result2 <- solve(prob2)
 cat("Objective:", result2$value)
 
 beta_nnls <- result2$getValue(beta)
-all(beta_nnls >= 0)   # All resulting beta should be non-negative
+all(beta_nnls >= -1e-6)   # All resulting beta should be non-negative
 cat("\nOptimal NNLS Beta:", beta_nnls)
 
 # Calculate the fitted y values
 fit_ols <- X %*% beta_ols
 fit_nnls <- X %*% beta_nnls
 
-# Plot coefficients for OLS and NNLS
+# ---- Plot coefficients for OLS and NNLS ----
 coeff2 <- cbind(beta_true, beta_ols, beta_nnls)
 colnames(coeff2) <- c("Actual", "OLS", "NNLS")
 rownames(coeff2) <- paste0("beta[", seq_along(beta_true) - 1L, "]")

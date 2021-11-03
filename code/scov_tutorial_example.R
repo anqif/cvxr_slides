@@ -4,6 +4,7 @@ library(grid)
 library(Matrix)
 library(expm)
 
+# ---- Plotting functions ----
 theme_bare <- theme(
   axis.line = element_blank(), 
   axis.text.x = element_blank(), 
@@ -33,12 +34,12 @@ plotSpMat <- function(S, alpha) {
   p + theme_bare
 }
 
+# ---- Problem data ----
 set.seed(1)
 tol <- 1e-4
 n <- 10      # Dimension of matrix
 m <- 1000    # Number of samples
 
-# Problem data
 A <- rsparsematrix(n, n, 0.15, rand.x = stats::rnorm)
 S_true <- A %*% t(A) + 0.05 * diag(rep(1, n))    ## Force matrix to be strictly positive definite
 R <- base::solve(S_true)
@@ -47,8 +48,9 @@ Q <- cov(x_sample)    ## Sample covariance matrix
 plotSpMat(S_true)
 
 # alphas <- c(10, 8, 6, 4, 1)
-alpha <- 1
+alpha <- 6
 
+# ---- Sparse inverse covariance estimation problem ----
 S <- Variable(n, n, PSD = TRUE)
 obj <- log_det(S) - matrix_trace(S %*% Q)
 constr <- list(sum(abs(S)) <= alpha)
