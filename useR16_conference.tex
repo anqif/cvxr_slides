@@ -65,7 +65,7 @@
 \definecolor{pdefsparseindices}{rgb}{0.667,0.000,0.533}
 \newcommand{\pdefsparseindices}[1]{\textcolor{pdefsparseindices}{#1}}
 
-\title{Disciplined Convex Optimization with CVXR}
+\title{CVXR: An R Package for Disciplined Convex Optimization}
 
 \author{\textbf{Anqi Fu} \and Bala Narasimhan \and Stephen Boyd \\[2ex]
 	EE \& Statistics Departments\\[1ex]
@@ -142,7 +142,7 @@ enables fast prototyping
 	\begin{verbatim}
 	from cvxpy import *
 	beta = Variable(n)
-	cost = norm(X * beta - y)
+	cost = norm(X @ beta - y)
 	prob = Problem(Minimize(cost))
 	prob.solve()
 	beta.value
@@ -566,7 +566,7 @@ maximize entropy
 		\item Make connecting new solvers easier
 		\item Further speed improvements
 	\EIT
-	
+	\medskip
 	Official site: \url{cvxr.rbind.io} \\
 	CRAN page: \url{CRAN.R-project.org/package=CVXR}
 \end{frame}
