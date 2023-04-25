@@ -257,7 +257,7 @@ enables fast prototyping
 	A modeling language in R for convex optimization
 	
 	\BIT
-		\item Connects to many solvers: ECOS, SCS, MOSEK, etc
+		\item Connects to many solvers: ECOS, MOSEK, GUROBI, etc   % SCS for SDPs.
 		\item Mixes easily with general R code and other libraries
 		\item Uses disciplined convex programming to 
 		verify convexity
@@ -561,9 +561,12 @@ maximize entropy
 \section{Future Work}
 \begin{frame}{Future Work}
 	\BIT
-		\item Flesh out convex functions in library
+		% \item Flesh out convex functions in library
+		\item Add more atoms: matrix operators, log transforms, etc
 		\item Develop more applications and examples
-		\item Make connecting new solvers easier
+		% \item Make connecting new solvers easier
+		\item Implement disciplined quasiconvex programming
+		\item Implement disciplined parametrized programming
 		\item Further speed improvements
 	\EIT
 	\medskip
